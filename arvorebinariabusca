@@ -1,0 +1,199 @@
+public class ArvoreBinariaBusca {
+
+    private NodoArvore raiz;
+
+    public ArvoreBinariaBusca() {
+        raiz = null;
+    }
+
+    // Inserção
+    private NodoArvore insere(NodoArvore atual, int v) {
+        if (atual == null)
+            return new NodoArvore(v, null, null);
+
+        if (v < atual.getValor())
+            atual.setEsquerda(insere(atual.getEsquerda(), v));
+        else
+            atual.setDireita(insere(atual.getDireita(), v));
+
+        return atual;
+    }
+
+    public void insere(int v) {
+        raiz = insere(raiz, v);
+    }
+
+    // Busca
+    private boolean busca(NodoArvore nodo, int v) {
+        if (nodo == null)
+            return false;
+
+        if (v == nodo.getValor())
+            return true;
+
+        if (v < nodo.getValor())
+            return busca(nodo.getEsquerda(), v);
+
+        return busca(nodo.getDireita(), v);
+    }
+
+    public boolean busca(int v) {
+        return busca(raiz, v);
+    }
+
+    // Pré-ordem
+    private void imprimePre(NodoArvore nodo) {
+        if (nodo != null) {
+            System.out.print(nodo.getValor() + " ");
+            imprimePre(nodo.getEsquerda());
+            imprimePre(nodo.getDireita());
+        }
+    }
+
+    public void imprimePre() {
+        imprimePre(raiz);
+        System.out.println();
+    }
+
+    // Em ordem
+    private void imprimeEmOrdem(NodoArvore nodo) {
+        if (nodo != null) {
+            imprimeEmOrdem(nodo.getEsquerda());
+            System.out.print(nodo.getValor() + " ");
+            imprimeEmOrdem(nodo.getDireita());
+        }
+    }
+
+    public void imprimeEmOrdem() {
+        imprimeEmOrdem(raiz);
+        System.out.println();
+    }
+
+    // Pós-ordem
+    private void imprimePos(NodoArvore nodo) {
+        if (nodo != null) {
+            imprimePos(nodo.getEsquerda());
+            imprimePos(nodo.getDireita());
+            System.out.print(nodo.getValor() + " ");
+        }
+    }
+
+    public void imprimePos() {
+        imprimePos(raiz);
+        System.out.println();
+    }
+
+    // Altura
+    private int altura(NodoArvore nodo) {
+        if (nodo == null)
+            return -1;
+
+        return 1 + Math.max(altura(nodo.getEsquerda()),
+                            altura(nodo.getDireita()));
+    }
+
+    public int altura() {
+        return altura(raiz);
+    }
+
+    // Remoção
+    private NodoArvore retiraValor(NodoArvore nodo, int numero) {
+
+        if (nodo == null)
+            return null;
+
+        if (numero < nodo.getValor())
+            nodo.setEsquerda(retiraValor(nodo.getEsquerda(), numero));
+
+        else if (numero > nodo.getValor())
+            nodo.setDireita(retiraValor(nodo.getDireita(), numero));
+
+        else {
+
+            if (nodo.getEsquerda() == null && nodo.getDireita() == null)
+                return null;
+
+            if (nodo.getEsquerda() == null)
+                return nodo.getDireita();
+
+            if (nodo.getDireita() == null)
+                return nodo.getEsquerda();
+
+            NodoArvore temp = nodo.getEsquerda();
+
+            while (temp.getDireita() != null)
+                temp = temp.getDireita();
+
+            nodo.setValor(temp.getValor());
+            nodo.setEsquerda(retiraValor(nodo.getEsquerda(), temp.getValor()));
+        }
+
+        return nodo;
+    }
+
+    public void retiraNodo(int valor) {
+        raiz = retiraValor(raiz, valor);
+    }
+
+    // Desafios extras
+
+    public boolean arvVazia() {
+        return raiz == null;
+    }
+
+    private int contaNos(NodoArvore nodo) {
+        if (nodo == null)
+            return 0;
+        return 1 + contaNos(nodo.getEsquerda()) + contaNos(nodo.getDireita());
+    }
+
+    public int contaNos() {
+        return contaNos(raiz);
+    }
+
+    private int contaFolhas(NodoArvore nodo) {
+        if (nodo == null)
+            return 0;
+
+        if (nodo.getEsquerda() == null && nodo.getDireita() == null)
+            return 1;
+
+        return contaFolhas(nodo.getEsquerda()) + contaFolhas(nodo.getDireita());
+    }
+
+    public int contaFolhas() {
+        return contaFolhas(raiz);
+    }
+
+    private boolean ehCheia(NodoArvore nodo) {
+
+        if (nodo == null)
+            return true;
+
+        if (nodo.getEsquerda() == null && nodo.getDireita() == null)
+            return true;
+
+        if (nodo.getEsquerda() != null && nodo.getDireita() != null)
+            return ehCheia(nodo.getEsquerda()) && ehCheia(nodo.getDireita());
+
+        return false;
+    }
+
+    public boolean ehCheia() {
+        return ehCheia(raiz);
+    }
+
+    public int menorValor() {
+        NodoArvore atual = raiz;
+        while (atual.getEsquerda() != null)
+            atual = atual.getEsquerda();
+        return atual.getValor();
+    }
+
+    public int maiorValor() {
+        NodoArvore atual = raiz;
+        while (atual.getDireita() != null)
+            atual = atual.getDireita();
+        return atual.getValor();
+    }
+}
